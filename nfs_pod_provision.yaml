@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-pod-provisioner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-pod-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-pod-provisioner
+    spec:
+      serviceAccountName: nfs-pod-provisioner-sa	#"serviceaccount yaml'da verdiğimiz isim"
+      containers:
+        - name: nfs-client-provisioner	# do not change
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-provisioner-volume
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME	# "değişmeyecek"
+              value: nfs-provisioner	# "storageclass'da verdiğimiz isim."
+            - name: NFS_SERVER		# "değişmeyecek"
+              value: 10.2.60.20	# "nfs serverımızın ip'si"
+            - name: NFS_PATH		# "değişmeyecek"
+              value: /srv/nfs/nfsdata	# "nfs server yolu"
+      volumes:
+        - name: nfs-provisioner-volume	# "yukarıdaki volume mount ile aynı isim olacak."
+          nfs:
+            server: 10.2.60.20	# "nfs serverımızın ip'si"
+            path: /srv/nfs/nfsdata	# "nfs server yolu"
