@@ -25,11 +25,11 @@ spec:
             - name: PROVISIONER_NAME	# "değişmeyecek"
               value: nfs-provisioner	# "storageclass'da verdiğimiz isim."
             - name: NFS_SERVER		# "değişmeyecek"
-              value: 10.2.60.20	# "nfs serverımızın ip'si"
+              value: 0.0.0.0	# "nfs serverımızın ip'si"
             - name: NFS_PATH		# "değişmeyecek"
               value: /srv/nfs/nfsdata	# "nfs server yolu"
       volumes:
         - name: nfs-provisioner-volume	# "yukarıdaki volume mount ile aynı isim olacak."
           nfs:
-            server: 10.2.60.20	# "nfs serverımızın ip'si"
+            server: 0.0.0.0	# "nfs serverımızın ip'si"
             path: /srv/nfs/nfsdata	# "nfs server yolu"
